@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="auto">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LiquidaYa — Calculadora de Liquidación Laboral Colombia 2026 (Gratis)</title>
+<meta name="description" content="Calcula gratis tu liquidación laboral en Colombia 2026: cesantías, intereses, prima, vacaciones e indemnización. Al instante, sin registro." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Tokens / Temas ---------- */
+  :root{
+    --radius: 16px;
+    --radius-sm: 10px;
+    --font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    --maxw: 1180px;
+    --transition: background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
+    --shadow: 0 8px 30px rgba(15,23,42,.08);
+    --shadow-lg: 0 20px 50px rgba(15,23,42,.12);
+  }
+  [data-theme="light"]{
+    --bg:#f6f8fb; --surface:#ffffff; --surface-2:#eef2f7;
+    --text:#0f172a; --muted:#5b6779; --border:#e2e8f0;
+    --accent:#2563eb; --accent-2:#1d4ed8; --accent-soft:#dbeafe;
+    --success:#059669; --success-soft:#d1fae5;
+    --warn:#b45309; --warn-soft:#fef3c7;
+    --danger:#dc2626;
+  }
+  [data-theme="dark"]{
+    --bg:#0b1120; --surface:#111827; --surface-2:#1a2333;
+    --text:#e5e7eb; --muted:#94a3b8; --border:#243044;
+    --accent:#60a5fa; --accent-2:#3b82f6; --accent-soft:#1e3a5f;
+    --success:#34d399; --success-soft:#064e3b;
+    --warn:#fbbf24; --warn-soft:#3b2f0b;
+    --danger:#f87171;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; font-family:var(--font); background:var(--bg); color:var(--text);
+    transition: var(--transition); line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 20px}
+
+  /* ---------- Header ---------- */
+  header.site{
+    position:sticky; top:0; z-index:50; backdrop-filter: blur(10px);
+    background: color-mix(in srgb, var(--surface) 85%, transparent);
+    border-bottom:1px solid var(--border); transition: var(--transition);
+  }
+  .nav{display:flex; align-items:center; gap:24px; height:64px}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15rem; color:var(--text)}
+  .brand:hover{text-decoration:none}
+  .brand .dot{
+    width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:grid;place-items:center;color:#fff;font-weight:800;font-size:.95rem;
+  }
+  .brand span.tag{font-weight:500;font-size:.8rem;color:var(--muted);margin-left:4px}
+  .navlinks{display:flex; gap:4px; margin-left:auto}
+  .navlinks a{
+    color:var(--muted); font-weight:500; font-size:.92rem; padding:8px 12px; border-radius:9px;
+    transition:var(--transition);
+  }
+  .navlinks a:hover{background:var(--surface-2); color:var(--text); text-decoration:none}
+  .theme-toggle{
+    display:flex; background:var(--surface-2); border-radius:10px; padding:3px; gap:2px; border:1px solid var(--border);
+  }
+  .theme-toggle button{
+    border:none; background:transparent; color:var(--muted); cursor:pointer;
+    width:32px;height:32px;border-radius:7px; display:grid; place-items:center; font-size:1rem;
+    transition:var(--transition);
+  }
+  .theme-toggle button[aria-pressed="true"]{background:var(--surface); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,.12)}
+  .theme-toggle button:hover{color:var(--text)}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:48px 0 24px}
+  .hero-grid{display:grid; grid-template-columns: 1.05fr .95fr; gap:40px; align-items:start}
+  .badges{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px}
+  .badge{
+    display:inline-flex; align-items:center; gap:6px; font-size:.8rem; font-weight:600;
+    padding:6px 12px; border-radius:999px; background:var(--surface-2); color:var(--muted);
+    border:1px solid var(--border);
+  }
+  .badge.ok{background:var(--success-soft); color:var(--success); border-color:transparent}
+  h1{font-size:clamp(1.9rem, 3.4vw, 2.9rem); line-height:1.1; margin:0 0 14px; letter-spacing:-.02em}
+  h1 .hl{color:var(--accent)}
+  .lead{color:var(--muted); font-size:1.08rem; margin:0 0 22px; max-width:52ch}
+  .mini-list{list-style:none; padding:0; margin:0; display:grid; gap:10px}
+  .mini-list li{display:flex; gap:10px; align-items:flex-start; font-size:.95rem; color:var(--muted)}
+  .mini-list svg{flex:0 0 18px; margin-top:2px; color:var(--success)}
+
+  /* ---------- Calculadora ---------- */
+  .calc-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:24px; box-shadow:var(--shadow-lg); transition:var(--transition);
+    position:sticky; top:84px;
+  }
+  .calc-card h2{margin:0 0 4px; font-size:1.15rem}
+  .calc-card .sub{color:var(--muted); font-size:.88rem; margin:0 0 18px}
+  .field{margin-bottom:14px}
+  .field label{display:block; font-size:.85rem; font-weight:600; margin-bottom:6px; color:var(--text)}
+  .field .hint{font-size:.78rem; color:var(--muted); margin-top:5px}
+  .input-wrap{position:relative; display:flex; align-items:center}
+  .input-wrap .prefix{
+    position:absolute; left:12px; color:var(--muted); font-weight:600; pointer-events:none;
+  }
+  .input-wrap .suffix{
+    position:absolute; right:12px; color:var(--muted); font-size:.8rem; pointer-events:none;
+  }
+  input[type="text"], input[type="date"], select{
+    width:100%; padding:11px 14px; border-radius:var(--radius-sm);
+    border:1px solid var(--border); background:var(--surface); color:var(--text);
+    font-family:inherit; font-size:.95rem; transition:var(--transition);
+    font-variant-numeric: tabular-nums;
+  }
+  input[type="text"].money{padding-left:30px}
+  input:focus, select:focus{
+    outline:none; border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  .row-2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .check{
+    display:flex; align-items:center; gap:9px; font-size:.88rem; color:var(--muted);
+    padding:10px 12px; background:var(--surface-2); border-radius:var(--radius-sm);
+    border:1px solid var(--border); cursor:pointer; transition:var(--transition);
+  }
+  .check input{accent-color:var(--accent); width:16px;height:16px}
+  .btn-primary{
+    width:100%; border:none; cursor:pointer; padding:14px 18px; border-radius:var(--radius-sm);
+    background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#fff;
+    font-weight:700; font-size:1rem; font-family:inherit; transition:var(--transition);
+    box-shadow:0 6px 18px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .btn-primary:hover{transform:translateY(-1px); box-shadow:0 10px 24px color-mix(in srgb, var(--accent) 45%, transparent)}
+  .btn-primary:active{transform:translateY(0)}
+  .btn-ghost{
+    border:1px solid var(--border); background:transparent; color:var(--text);
+    padding:10px 14px; border-radius:var(--radius-sm); cursor:pointer; font-family:inherit;
+    font-weight:600; font-size:.88rem; transition:var(--transition);
+  }
+  .btn-ghost:hover{background:var(--surface-2)}
+
+  /* ---------- Resultado ---------- */
+  .result{
+    margin-top:18px; padding:18px; border-radius:var(--radius);
+    background:linear-gradient(135deg, var(--success-soft), transparent);
+    border:1px solid color-mix(in srgb, var(--success) 30%, var(--border));
+    display:none;
+  }
+  .result.show{display:block; animation: fadeUp .35s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none}}
+  .result .total-label{font-size:.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; font-weight:700}
+  .result .total{
+    font-size:2rem; font-weight:800; color:var(--success); letter-spacing:-.02em;
+    font-variant-numeric: tabular-nums; margin:2px 0 14px;
+  }
+  .breakdown{display:grid; gap:8px}
+  .bk-row{
+    display:flex; justify-content:space-between; gap:12px; padding:9px 12px;
+    background:var(--surface); border-radius:var(--radius-sm); border:1px solid var(--border);
+    font-size:.9rem;
+  }
+  .bk-row .k{color:var(--muted)}
+  .bk-row .v{font-weight:700; font-variant-numeric: tabular-nums}
+  .bk-row.indem .v{color:var(--accent)}
+  .result-actions{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap}
+  .disclaimer{font-size:.75rem; color:var(--muted); margin-top:10px}
+
+  /* ---------- Secciones ---------- */
+  section.block{padding:44px 0; border-top:1px solid var(--border)}
+  .section-title{font-size:1.6rem; margin:0 0 6px; letter-spacing:-.01em}
+  .section-sub{color:var(--muted); margin:0 0 24px}
+
+  .tabs{display:flex; gap:4px; flex-wrap:wrap; border-bottom:1px solid var(--border); margin-bottom:24px}
+  .tab-btn{
+    border:none; background:transparent; color:var(--muted); font-family:inherit; cursor:pointer;
+    padding:12px 16px; font-weight:600; font-size:.92rem; border-bottom:2px solid transparent;
+    transition:var(--transition);
+  }
+  .tab-btn:hover{color:var(--text)}
+  .tab-btn[aria-selected="true"]{color:var(--accent); border-bottom-color:var(--accent)}
+  .tab-panel{display:none; animation:fadeUp .3s ease}
+  .tab-panel.show{display:block}
+
+  .steps{display:grid; gap:14px}
+  .step{
+    display:grid; grid-template-columns:44px 1fr; gap:16px; padding:18px;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    transition:var(--transition);
+  }
+  .step .num{
+    width:44px;height:44px;border-radius:12px; background:var(--accent-soft); color:var(--accent);
+    display:grid; place-items:center; font-weight:800;
+  }
+  .step h4{margin:0 0 4px; font-size:1rem}
+  .step p{margin:0; color:var(--muted); font-size:.92rem}
+  .step code{background:var(--surface-2); padding:2px 6px; border-radius:6px; font-size:.82rem}
+
+  .cards-3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+  .case-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; transition:var(--transition);
+  }
+  .case-card h4{margin:0 0 8px; font-size:1rem}
+  .case-card .case-total{font-size:1.4rem; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums}
+  .case-card p{color:var(--muted); font-size:.88rem; margin:8px 0 0}
+
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:24px}
+  .panel{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:22px;
+  }
+  .panel h4{margin:0 0 12px; display:flex; align-items:center; gap:8px}
+  .panel ul{margin:0; padding-left:18px; color:var(--muted); font-size:.92rem}
+  .panel ul li{margin-bottom:8px}
+  .panel.warn{border-color:color-mix(in srgb, var(--warn) 40%, var(--border))}
+  .panel.warn h4{color:var(--warn)}
+
+  /* Tabla */
+  .table-wrap{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface)}
+  table{width:100%; border-collapse:collapse; font-size:.9rem}
+  th,td{padding:12px 14px; text-align:right; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums}
+  th:first-child, td:first-child{text-align:left}
+  thead th{background:var(--surface-2); color:var(--muted); font-weight:700; font-size:.78rem; text-transform:uppercase; letter-spacing:.05em}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface-2)}
+
+  /* FAQ */
+  .faq{display:grid; gap:10px}
+  details{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:0; transition:var(--transition); overflow:hidden;
+  }
+  details[open]{border-color:var(--accent)}
+  summary{
+    cursor:pointer; padding:16px 18px; font-weight:600; font-size:.95rem;
+    list-style:none; display:flex; justify-content:space-between; gap:12px; align-items:center;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+"; font-size:1.3rem; color:var(--accent); transition:transform .2s}
+  details[open] summary::after{content:"−"}
+  details .faq-body{padding:0 18px 16px; color:var(--muted); font-size:.92rem}
+
+  /* Footer */
+  footer.site{
+    border-top:1px solid var(--border); padding:32px 0; margin-top:20px;
+    color:var(--muted); font-size:.85rem;
+  }
+  footer .foot-grid{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap}
+  footer .copyright{
+    margin-top:18px; padding-top:14px; border-top:1px solid var(--border);
+    font-size:.8rem; color:var(--muted); text-align:center;
+  }
+  footer .copyright strong{color:var(--text)}
+
+  /* Responsive */
+  @media (max-width: 900px){
+    .hero-grid{grid-template-columns:1fr}
+    .calc-card{position:static}
+    .cards-3{grid-template-columns:1fr}
+    .two-col{grid-template-columns:1fr}
+    .navlinks{display:none}
+  }
+  @media (max-width: 520px){
+    .row-2{grid-template-columns:1fr}
+    .result .total{font-size:1.6rem}
+  }
+
+  /* Accesibilidad */
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; animation:none !important; scroll-behavior:auto !important}
+  }
+
+  /* ============================================================
+     REPORTE DE IMPRESIÓN
+     ============================================================ */
+  .print-report{ display:none; }
+
+  @media print{
+    body > *:not(#printReport){ display:none !important; }
+
+    #printReport{
+      display:block !important;
+      font-family: 'Inter', Arial, sans-serif;
+      color:#0f172a;
+      background:#fff;
+      padding:0;
+      max-width:100%;
+    }
+
+    @page{ size: A4; margin: 18mm 16mm; }
+
+    body{ background:#fff !important; }
+
+    .pr-header{
+      display:flex; justify-content:space-between; align-items:flex-start;
+      gap:20px; padding-bottom:14px; border-bottom:2px solid #2563eb; margin-bottom:22px;
+    }
+    .pr-brand{ display:flex; gap:12px; align-items:center; }
+    .pr-logo{
+      width:42px;height:42px;border-radius:11px;
+      background:#2563eb;color:#fff;display:grid;place-items:center;
+      font-weight:800;font-size:1.1rem;
+    }
+    .pr-brand strong{ display:block; font-size:1.1rem; }
+    .pr-brand span{ display:block; font-size:.78rem; color:#5b6779; }
+    .pr-meta{ text-align:right; font-size:.78rem; color:#5b6779; }
+    .pr-meta span{ display:block; text-transform:uppercase; letter-spacing:.05em; font-weight:700; font-size:.68rem; }
+    .pr-meta strong{ display:block; color:#0f172a; font-size:.85rem; margin-bottom:6px; }
+
+    .pr-title{ font-size:1.35rem; margin:0 0 16px; letter-spacing:-.01em; }
+
+    .pr-datos{ width:100%; border-collapse:collapse; margin-bottom:22px; font-size:.88rem; }
+    .pr-datos th, .pr-datos td{ padding:8px 10px; border-bottom:1px solid #e2e8f0; text-align:left; }
+    .pr-datos th{ width:45%; color:#5b6779; font-weight:600; background:#f6f8fb; }
+    .pr-datos td{ font-weight:600; }
+
+    .pr-subtitle{ font-size:1rem; margin:0 0 8px; }
+
+    .pr-conceptos{ width:100%; border-collapse:collapse; font-size:.88rem; margin-bottom:18px; }
+    .pr-conceptos th, .pr-conceptos td{ padding:9px 10px; border-bottom:1px solid #e2e8f0; text-align:left; }
+    .pr-conceptos thead th{
+      background:#eef2f7; color:#5b6779; font-size:.72rem; text-transform:uppercase;
+      letter-spacing:.05em; font-weight:700;
+    }
+    .pr-conceptos .num{ text-align:right; font-variant-numeric:tabular-nums; }
+    .pr-conceptos tfoot td{
+      border-top:2px solid #2563eb; border-bottom:none; padding-top:12px;
+      font-size:.95rem;
+    }
+    .pr-conceptos tfoot .num{ font-size:1.05rem; color:#2563eb; }
+
+    .pr-nota{
+      font-size:.76rem; color:#5b6779; background:#f6f8fb; border:1px solid #e2e8f0;
+      border-radius:8px; padding:10px 12px; margin-top:18px; line-height:1.5;
+    }
+
+    .pr-footer{
+      margin-top:24px; padding-top:10px; border-top:1px solid #e2e8f0;
+      font-size:.72rem; color:#94a3b8; text-align:center;
+    }
+
+    .pr-conceptos, .pr-datos{ page-break-inside:avoid; }
+    .pr-nota{ page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <span class="dot">L</span>
+      LiquidaYa <span class="tag">· Colombia</span>
+    </a>
+    <nav class="navlinks" aria-label="Navegación principal">
+      <a href="#calculadora">Calculadora</a>
+      <a href="#guia">Cómo se calcula</a>
+      <a href="#tabla">Tabla 2026</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="theme-toggle" role="group" aria-label="Tema de la interfaz">
+      <button type="button" data-set-theme="light" title="Tema claro" aria-label="Tema claro">☀️</button>
+      <button type="button" data-set-theme="auto"  title="Tema automático" aria-label="Tema automático">🌓</button>
+      <button type="button" data-set-theme="dark"  title="Tema oscuro" aria-label="Tema oscuro">🌙</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ================= HERO + CALCULADORA ================= -->
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="badges">
+            <span class="badge ok">✓ Gratis</span>
+            <span class="badge ok">✓ Sin registro</span>
+            <span class="badge">📅 Actualizado 2026</span>
+            <span class="badge">⚖️ Base legal CST</span>
+          </div>
+          <h1>Calcula tu <span class="hl">liquidación laboral</span> en Colombia en 1 minuto</h1>
+          <p class="lead">
+            Cesantías, intereses, prima, vacaciones e indemnización del artículo 64.
+            Al instante, con valores vigentes de 2026 y sin crear cuenta.
+          </p>
+          <ul class="mini-list">
+            <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> SMMLV 2026: $1.750.905 · Auxilio: $249.095</li>
+            <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Resultado en vivo mientras escribes</li>
+            <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Explicación paso a paso de cada concepto</li>
+          </ul>
+        </div>
+
+        <!-- Calculadora -->
+        <div class="calc-card" id="calculadora">
+          <h2>Tu liquidación</h2>
+          <p class="sub">Completa los datos. El resultado se actualiza solo.</p>
+
+          <form id="calcForm" novalidate>
+            <div class="field">
+              <label for="salario">Salario mensual</label>
+              <div class="input-wrap">
+                <span class="prefix">$</span>
+                <input id="salario" class="money" type="text" inputmode="numeric" placeholder="2.500.000" autocomplete="off" />
+              </div>
+              <div class="hint">Aplica auxilio de transporte hasta 2 SMMLV ($3.501.810).</div>
+            </div>
+
+            <div class="row-2">
+              <div class="field">
+                <label for="ingreso">Fecha de ingreso</label>
+                <input id="ingreso" type="date" />
+              </div>
+              <div class="field">
+                <label for="retiro">Fecha de retiro</label>
+                <input id="retiro" type="date" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="tipo">Motivo del retiro</label>
+              <select id="tipo">
+                <option value="renuncia">Renuncia voluntaria</option>
+                <option value="sin_justa">Despido sin justa causa</option>
+                <option value="con_justa">Despido con justa causa</option>
+                <option value="fijo">Fin de contrato a término fijo</option>
+              </select>
+            </div>
+
+            <div class="field" id="fijoField" style="display:none">
+              <label for="fijoFin">Fecha de vencimiento del contrato fijo</label>
+              <input id="fijoFin" type="date" />
+              <div class="hint">La indemnización equivale a los días que faltaban, con piso de 15.</div>
+            </div>
+
+            <label class="check">
+              <input type="checkbox" id="auxilio" checked />
+              Incluir auxilio de transporte en la base
+            </label>
+
+            <div style="margin-top:16px">
+              <button class="btn-primary" type="submit">Calcular liquidación</button>
+            </div>
+          </form>
+
+          <!-- Resultado -->
+          <div class="result" id="result" aria-live="polite">
+            <div class="total-label">Total estimado</div>
+            <div class="total" id="total">$0</div>
+            <div class="breakdown" id="breakdown"></div>
+            <div class="result-actions">
+              <button class="btn-ghost" type="button" id="copyBtn">Copiar resumen</button>
+              <button class="btn-ghost" type="button" id="printBtn">Imprimir / PDF</button>
+            </div>
+            <p class="disclaimer">Cálculo informativo. No sustituye asesoría legal ni la liquidación oficial del empleador.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= GUÍA / TABS ================= -->
+  <section class="block" id="guia">
+    <div class="wrap">
+      <h2 class="section-title">Cómo se calcula la liquidación, paso a paso</h2>
+      <p class="section-sub">Base comercial de 360 días · Valores en pesos colombianos (COP).</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn" role="tab" aria-selected="true"  data-tab="t1">Paso a paso</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="t2">Casos resueltos</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="t3">Qué no entra</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="t4">Errores comunes</button>
+      </div>
+
+      <!-- Tab 1 -->
+      <div class="tab-panel show" id="t1" role="tabpanel">
+        <div class="steps">
+          <div class="step"><div class="num">1</div><div>
+            <h4>Cesantías</h4>
+            <p>Un mes de salario por año (art. 249 CST). <code>base × días ÷ 360</code>. La base incluye auxilio de transporte. Solo se liquidan los días del año en curso; las de años anteriores ya están en el fondo.</p>
+          </div></div>
+          <div class="step"><div class="num">2</div><div>
+            <h4>Intereses sobre cesantías</h4>
+            <p>12% anual sobre las cesantías (Ley 52 de 1975). <code>cesantías × días × 12% ÷ 360</code>. Se pagan al trabajador, no al fondo.</p>
+          </div></div>
+          <div class="step"><div class="num">3</div><div>
+            <h4>Prima de servicios</h4>
+            <p>30 días de salario al año, pagada en junio y diciembre (art. 306 CST). En la liquidación solo se paga la fracción del semestre en curso.</p>
+          </div></div>
+          <div class="step"><div class="num">4</div><div>
+            <h4>Vacaciones</h4>
+            <p>15 días hábiles por año (art. 186 CST). <code>salario × días ÷ 720</code>. El auxilio de transporte no entra en la base.</p>
+          </div></div>
+          <div class="step"><div class="num">5</div><div>
+            <h4>Indemnización (art. 64 CST)</h4>
+            <p>Solo si el despido es sin justa causa. Con salario bajo 10 SMMLV: 30 días por el primer año y 20 por cada año adicional. En contrato fijo: los días que faltaban (piso 15).</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- Tab 2 -->
+      <div class="tab-panel" id="t2" role="tabpanel">
+        <div class="cards-3">
+          <div class="case-card">
+            <h4>1. Renuncia tras 2,5 años</h4>
+            <div class="case-total">$4.917.207</div>
+            <p>Salario $2.500.000 con auxilio. Sin indemnización. Las vacaciones acumulan toda la antigüedad; las cesantías solo el año en curso.</p>
+          </div>
+          <div class="case-card">
+            <h4>2. Despido sin justa causa (3 años)</h4>
+            <div class="case-total">$20.512.963</div>
+            <p>Salario $4.000.000 sin auxilio. La indemnización del art. 64 pesa más que todas las prestaciones juntas.</p>
+          </div>
+          <div class="case-card">
+            <h4>3. Contrato fijo cortado antes</h4>
+            <div class="case-total">$21.770.954</div>
+            <p>Salario $3.000.000. Indemnización = días que faltaban (180). Cortar un contrato largo recién empezado sale caro.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3 -->
+      <div class="tab-panel" id="t3" role="tabpanel">
+        <div class="two-col">
+          <div class="panel">
+            <h4>✅ Sí entra en la liquidación</h4>
+            <ul>
+              <li>Cesantías e intereses del año en curso.</li>
+              <li>Prima del semestre en curso.</li>
+              <li>Vacaciones no disfrutadas de toda la antigüedad.</li>
+              <li>Indemnización art. 64 (si aplica).</li>
+            </ul>
+          </div>
+          <div class="panel warn">
+            <h4>⚠️ No entra (se paga aparte)</h4>
+            <ul>
+              <li>Salarios pendientes del último mes (nómina).</li>
+              <li>Cesantías de años anteriores (están en el fondo).</li>
+              <li>Horas extras, recargos y comisiones no pagados.</li>
+              <li>Indemnización moratoria del art. 65 (nace por mora).</li>
+              <li>Auxilio de transporte del mes (nómina).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4 -->
+      <div class="tab-panel" id="t4" role="tabpanel">
+        <div class="steps">
+          <div class="step"><div class="num">✕</div><div><h4>Contar días con calendario real</h4><p>Se usa base comercial de 360: cada mes = 30 días. Dividir entre 365 descuadra todo.</p></div></div>
+          <div class="step"><div class="num">✕</div><div><h4>Meter auxilio en vacaciones</h4><p>Entra en cesantías y prima, pero no en vacaciones (art. 192 CST).</p></div></div>
+          <div class="step"><div class="num">✕</div><div><h4>Sumar todas las cesantías de la antigüedad</h4><p>Solo se deben las del año en curso; las anteriores están en el fondo.</p></div></div>
+          <div class="step"><div class="num">✕</div><div><h4>Creer que renunciar da indemnización</h4><p>Las prestaciones se causan igual, pero el art. 64 solo procede en despido sin justa causa.</p></div></div>
+          <div class="step"><div class="num">✕</div><div><h4>Liquidar salario integral como ordinario</h4><p>Quien tiene salario integral no recibe prima ni cesantías por separado.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TABLA ================= -->
+  <section class="block" id="tabla">
+    <div class="wrap">
+      <h2 class="section-title">Tabla de liquidación 2026 por salario (un año trabajado)</h2>
+      <p class="section-sub">Supuestos: 360 días, renuncia (sin indemnización), auxilio para salarios ≤ 2 SMMLV y semestre completo de prima.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Salario mensual</th><th>Cesantías</th><th>Intereses</th><th>Prima</th><th>Vacaciones</th><th>Total</th></tr>
+          </thead>
+          <tbody id="tablaBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="block" id="faq">
+    <div class="wrap">
+      <h2 class="section-title">Preguntas frecuentes</h2>
+      <p class="section-sub">Lo que más se consulta al liquidar en Colombia.</p>
+      <div class="faq">
+        <details open><summary>¿Qué incluye la liquidación de un contrato de trabajo?</summary>
+          <div class="faq-body">Cesantías e intereses del año en curso, prima del semestre en curso y vacaciones no disfrutadas de toda la antigüedad. Si el despido fue sin justa causa, se suma la indemnización del artículo 64 del CST. También deben pagarse salarios pendientes y, si aplica, horas extras y recargos no cancelados.</div></details>
+        <details><summary>Llevo varios años, ¿me liquidan todas las cesantías?</summary>
+          <div class="faq-body">No. El empleador consigna las cesantías en un fondo a más tardar el 14 de febrero de cada año. Las de años anteriores ya están allá y se reclaman al fondo. En la liquidación solo entran las del año en curso. Las vacaciones sí se acumulan por toda la antigüedad.</div></details>
+        <details><summary>¿Cuánto es la liquidación por un año de trabajo?</summary>
+          <div class="faq-body">Con salario mínimo ($1.750.905) y auxilio, un año exacto liquida aproximadamente $4.115.453: $2.000.000 cesantías, $240.000 intereses, $1.000.000 prima y $875.453 vacaciones. Si hubo despido sin justa causa se agregan 30 días de salario.</div></details>
+        <details><summary>¿Cuándo deben pagarme la liquidación?</summary>
+          <div class="faq-body">Al terminar el contrato. Si el empleador no paga a tiempo, se activa la indemnización moratoria del artículo 65 del CST: un día de salario por cada día de retardo, durante los primeros 24 meses.</div></details>
+        <details><summary>¿Cambia si renuncio en vez de que me despidan?</summary>
+          <div class="faq-body">Las prestaciones (cesantías, intereses, prima y vacaciones) son las mismas. Lo que cambia es la indemnización del artículo 64, que solo procede en despido sin justa causa.</div></details>
+        <details><summary>¿El auxilio de transporte entra en la liquidación?</summary>
+          <div class="faq-body">Entra en la base de cesantías y prima para quienes devengan hasta 2 SMMLV ($3.501.810 en 2026). No entra en vacaciones ni en indemnización. En 2026 el auxilio es de $249.095 mensuales.</div></details>
+        <details><summary>¿Cómo se cuentan los días?</summary>
+          <div class="faq-body">En base comercial de 360 días: cada mes cuenta 30 días, sin importar si tiene 28 o 31. Por eso un año son 360 días y no 365.</div></details>
+        <details><summary>¿Qué pasó con el SMMLV 2026 y su suspensión?</summary>
+          <div class="faq-body">El Decreto 1469 de 2025 fijó el SMMLV 2026 en $1.750.905 (+23,7%). El Consejo de Estado lo suspendió en febrero de 2026 y en julio revocó esa suspensión. Hoy el valor aplicable es $1.750.905. Si liquidaste entre febrero y julio con la base transitoria, conviene revisar el cálculo con tu contador.</div></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <strong style="color:var(--text)">LiquidaYa</strong> · Calculadora de liquidación laboral Colombia 2026.<br>
+        Herramienta informativa. No sustituye asesoría legal.
+      </div>
+      <div>
+        Valores vigentes: SMMLV $1.750.905 · Auxilio $249.095.<br>
+        Base legal: CST arts. 64, 186, 192, 249, 306 · Ley 52/1975.
+      </div>
+    </div>
+    <div class="copyright">
+      © <span id="yearNow"></span> <strong>LiquidaYa</strong> · Desarrollado por <strong>Alejandro García Garay</strong>. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     REPORTE DE IMPRESIÓN (oculto en pantalla, visible al imprimir)
+     ============================================================ -->
+<section id="printReport" class="print-report" aria-hidden="true">
+  <div class="pr-header">
+    <div class="pr-brand">
+      <div class="pr-logo">L</div>
+      <div>
+        <strong>LiquidaYa</strong>
+        <span>Calculadora de liquidación laboral · Colombia</span>
+      </div>
+    </div>
+    <div class="pr-meta">
+      <div><span>Fecha de generación</span><strong id="prFecha"></strong></div>
+      <div><span>Referencia</span><strong id="prRef"></strong></div>
+    </div>
+  </div>
+
+  <h1 class="pr-title">Reporte de liquidación laboral</h1>
+
+  <table class="pr-datos">
+    <tbody>
+      <tr><th>Salario mensual</th><td id="prSalario"></td></tr>
+      <tr><th>Fecha de ingreso</th><td id="prIngreso"></td></tr>
+      <tr><th>Fecha de retiro</th><td id="prRetiro"></td></tr>
+      <tr><th>Tiempo laborado</th><td id="prTiempo"></td></tr>
+      <tr><th>Motivo del retiro</th><td id="prMotivo"></td></tr>
+      <tr><th>Auxilio de transporte en base</th><td id="prAuxilio"></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="pr-subtitle">Detalle de conceptos</h2>
+  <table class="pr-conceptos">
+    <thead>
+      <tr><th>Concepto</th><th>Base legal</th><th class="num">Valor (COP)</th></tr>
+    </thead>
+    <tbody id="prConceptosBody"></tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2"><strong>Total estimado a pagar</strong></td>
+        <td class="num"><strong id="prTotal"></strong></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="pr-nota">
+    <strong>Nota:</strong> Este reporte es informativo y se basa en los valores vigentes de 2026
+    (SMMLV $1.750.905 · Auxilio de transporte $249.095) y en la base comercial de 360 días.
+    No sustituye la liquidación oficial del empleador ni la asesoría de un profesional.
+  </div>
+
+  <div class="pr-footer">
+    Generado con <strong>LiquidaYa</strong> · Documento sin valor legal<br>
+    © <span id="prYear"></span> LiquidaYa · Desarrollado por Alejandro García Garay
+  </div>
+</section>
+
+<script>
+/* ============================================================
+   1) TEMA (claro / oscuro / auto) con persistencia
+   ============================================================ */
+(function(){
+  const root = document.documentElement;
+  const KEY = 'liquidaya-theme';
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function apply(theme){
+    if(theme === 'auto'){
+      root.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+    } else {
+      root.setAttribute('data-theme', theme);
+    }
+    document.querySelectorAll('[data-set-theme]').forEach(b=>{
+      b.setAttribute('aria-pressed', b.dataset.setTheme === theme ? 'true' : 'false');
+    });
+  }
+  function setTheme(theme){
+    localStorage.setItem(KEY, theme);
+    apply(theme);
+  }
+  const saved = localStorage.getItem(KEY) || 'auto';
+  apply(saved);
+  document.querySelectorAll('[data-set-theme]').forEach(b=>{
+    b.addEventListener('click', ()=> setTheme(b.dataset.setTheme));
+  });
+  mq.addEventListener('change', ()=>{ if((localStorage.getItem(KEY)||'auto')==='auto') apply('auto'); });
+})();
+
+/* ============================================================
+   2) UTILIDADES
+   ============================================================ */
+const COP = new Intl.NumberFormat('es-CO', { style:'currency', currency:'COP', maximumFractionDigits:0 });
+const fmt = n => COP.format(Math.round(n));
+const SMMLV = 1750905;
+const AUXILIO = 249095;
+
+function parseMoney(str){
+  const n = Number(String(str).replace(/[^\d]/g,''));
+  return isNaN(n) ? 0 : n;
+}
+function formatMoneyInput(el){
+  const n = parseMoney(el.value);
+  el.value = n ? new Intl.NumberFormat('es-CO').format(n) : '';
+}
+function daysBetween(a,b){
+  if(!a || !b) return 0;
+  const [ya,ma,da] = a.split('-').map(Number);
+  const [yb,mb,db] = b.split('-').map(Number);
+  const d = (yb-ya)*360 + (mb-ma)*30 + (db-da);
+  return Math.max(0, d);
+}
+
+/* Año dinámico en copyright */
+document.getElementById('yearNow').textContent = new Date().getFullYear();
+
+/* ============================================================
+   3) CALCULADORA
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const salarioEl = $('salario');
+const ingresoEl = $('ingreso');
+const retiroEl  = $('retiro');
+const tipoEl    = $('tipo');
+const fijoField = $('fijoField');
+const fijoFinEl = $('fijoFin');
+const auxilioEl = $('auxilio');
+const resultEl  = $('result');
+const totalEl   = $('total');
+const breakdownEl = $('breakdown');
+
+salarioEl.addEventListener('input', ()=> {
+  formatMoneyInput(salarioEl);
+  calculate();
+});
+
+salarioEl.addEventListener('change', ()=>{
+  const s = parseMoney(salarioEl.value);
+  if(s>0) auxilioEl.checked = s <= 2*SMMLV;
+});
+
+tipoEl.addEventListener('change', ()=>{
+  fijoField.style.display = tipoEl.value === 'fijo' ? 'block' : 'none';
+  calculate();
+});
+
+[ingresoEl, retiroEl, fijoFinEl, auxilioEl].forEach(el=>{
+  el.addEventListener('change', calculate);
+  el.addEventListener('input', calculate);
+});
+
+function calculate(){
+  const salario = parseMoney(salarioEl.value);
+  const ingreso = ingresoEl.value;
+  const retiro  = retiroEl.value;
+  const tipo    = tipoEl.value;
+  const usaAux  = auxilioEl.checked && salario <= 2*SMMLV && salario > 0;
+
+  if(!salario || !ingreso || !retiro) { resultEl.classList.remove('show'); return; }
+  if(new Date(retiro) <= new Date(ingreso)) { resultEl.classList.remove('show'); return; }
+
+  const diasTotales = daysBetween(ingreso, retiro);
+
+  const yearRetiro = retiro.slice(0,4);
+  const inicioAnio = `${yearRetiro}-01-01`;
+  const desde = new Date(ingreso) > new Date(inicioAnio) ? ingreso : inicioAnio;
+  const diasAnio = daysBetween(desde, retiro);
+
+  const mesRetiro = Number(retiro.slice(5,7));
+  const semestreInicio = mesRetiro <= 6 ? `${yearRetiro}-01-01` : `${yearRetiro}-07-01`;
+  const desdeSem = new Date(ingreso) > new Date(semestreInicio) ? ingreso : semestreInicio;
+  const diasSemestre = daysBetween(desdeSem, retiro);
+
+  const basePrestaciones = salario + (usaAux ? AUXILIO : 0);
+  const baseVacaciones   = salario;
+
+  const cesantias = basePrestaciones * diasAnio / 360;
+  const intereses = cesantias * diasAnio * 0.12 / 360;
+  const prima     = basePrestaciones * diasSemestre / 360;
+  const vacaciones = baseVacaciones * diasTotales / 720;
+
+  let indemnizacion = 0;
+  const aniosCompletos = Math.floor(diasTotales / 360);
+  if(tipo === 'sin_justa'){
+    if(salario < 10*SMMLV){
+      if(aniosCompletos >= 1){
+        indemnizacion = (30 + 20*(aniosCompletos-1)) * salario / 30;
+      } else {
+        indemnizacion = 30 * salario / 30 * (diasTotales/360);
+      }
+    } else {
+      indemnizacion = 20 * salario / 30 * aniosCompletos;
+    }
+  } else if(tipo === 'fijo' && fijoFinEl.value){
+    const faltantes = daysBetween(retiro, fijoFinEl.value);
+    const diasIndem = Math.max(15, faltantes);
+    indemnizacion = diasIndem * salario / 30;
+  }
+
+  const total = cesantias + intereses + prima + vacaciones + indemnizacion;
+
+  breakdownEl.innerHTML = '';
+  const rows = [
+    ['Cesantías', cesantias],
+    ['Intereses sobre cesantías', intereses],
+    ['Prima de servicios', prima],
+    ['Vacaciones', vacaciones],
+  ];
+  if(indemnizacion > 0) rows.push(['Indemnización (art. 64)', indemnizacion, true]);
+
+  rows.forEach(([k,v,indem])=>{
+    const div = document.createElement('div');
+    div.className = 'bk-row' + (indem ? ' indem' : '');
+    div.innerHTML = `<span class="k">${k}</span><span class="v">${fmt(v)}</span>`;
+    breakdownEl.appendChild(div);
+  });
+
+  totalEl.textContent = fmt(total);
+  resultEl.classList.add('show');
+  resultEl.dataset.total = total;
+
+  localStorage.setItem('liquidaya-data', JSON.stringify({
+    salario: salarioEl.value, ingreso, retiro, tipo, fijoFin: fijoFinEl.value, aux: auxilioEl.checked
+  }));
+}
+
+(function restore(){
+  try{
+    const d = JSON.parse(localStorage.getItem('liquidaya-data')||'{}');
+    if(d.salario) salarioEl.value = d.salario;
+    if(d.ingreso) ingresoEl.value = d.ingreso;
+    if(d.retiro)  retiroEl.value  = d.retiro;
+    if(d.tipo)    tipoEl.value    = d.tipo;
+    if(d.fijoFin) fijoFinEl.value = d.fijoFin;
+    if(typeof d.aux === 'boolean') auxilioEl.checked = d.aux;
+    if(d.tipo === 'fijo') fijoField.style.display = 'block';
+    if(d.salario && d.ingreso && d.retiro) calculate();
+  }catch(e){}
+})();
+
+$('calcForm').addEventListener('submit', e=>{ e.preventDefault(); calculate(); });
+
+$('copyBtn').addEventListener('click', ()=>{
+  const lines = Array.from(breakdownEl.querySelectorAll('.bk-row')).map(r=>{
+    const k = r.querySelector('.k').textContent;
+    const v = r.querySelector('.v').textContent;
+    return `${k}: ${v}`;
+  });
+  const txt = `Liquidación estimada (LiquidaYa)\n${lines.join('\n')}\nTOTAL: ${totalEl.textContent}`;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn = $('copyBtn'); const old = btn.textContent;
+    btn.textContent = '¡Copiado!'; setTimeout(()=>btn.textContent = old, 1500);
+  });
+});
+
+/* ============================================================
+   4) REPORTE DE IMPRESIÓN
+   ============================================================ */
+function buildPrintReport(){
+  const salario = parseMoney(salarioEl.value);
+  const ingreso = ingresoEl.value;
+  const retiro  = retiroEl.value;
+  const tipo    = tipoEl.value;
+  const usaAux  = auxilioEl.checked && salario <= 2*SMMLV && salario > 0;
+
+  if(!salario || !ingreso || !retiro || resultEl.dataset.total === undefined){
+    calculate();
+  }
+
+  const total = Number(resultEl.dataset.total || 0);
+
+  const fmtFecha = iso => {
+    if(!iso) return '—';
+    const [y,m,d] = iso.split('-');
+    const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    return `${Number(d)} de ${meses[Number(m)-1]} de ${y}`;
+  };
+
+  const diasTotales = daysBetween(ingreso, retiro);
+  const anios = Math.floor(diasTotales/360);
+  const meses = Math.floor((diasTotales%360)/30);
+  const dias  = diasTotales%30;
+  const tiempoTxt = `${anios} año(s), ${meses} mes(es), ${dias} día(s) — ${diasTotales} días (base 360)`;
+
+  const motivos = {
+    renuncia: 'Renuncia voluntaria',
+    sin_justa: 'Despido sin justa causa',
+    con_justa: 'Despido con justa causa',
+    fijo: 'Fin de contrato a término fijo'
+  };
+
+  const now = new Date();
+  const ref = 'LY-' + now.getFullYear() +
+              String(now.getMonth()+1).padStart(2,'0') +
+              String(now.getDate()).padStart(2,'0') + '-' +
+              String(now.getHours()).padStart(2,'0') +
+              String(now.getMinutes()).padStart(2,'0');
+
+  document.getElementById('prFecha').textContent = fmtFecha(
+    `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`
+  );
+  document.getElementById('prRef').textContent = ref;
+  document.getElementById('prSalario').textContent = fmt(salario);
+  document.getElementById('prIngreso').textContent = fmtFecha(ingreso);
+  document.getElementById('prRetiro').textContent = fmtFecha(retiro);
+  document.getElementById('prTiempo').textContent = tiempoTxt;
+  document.getElementById('prMotivo').textContent = motivos[tipo] || tipo;
+  document.getElementById('prAuxilio').textContent =
+    usaAux ? `Sí — ${fmt(AUXILIO)} mensuales` : 'No';
+  document.getElementById('prYear').textContent = now.getFullYear();
+
+  const bases = {
+    'Cesantías': 'Art. 249 CST',
+    'Intereses sobre cesantías': 'Ley 52/1975',
+    'Prima de servicios': 'Art. 306 CST',
+    'Vacaciones': 'Art. 186 y 192 CST',
+    'Indemnización (art. 64)': 'Art. 64 CST'
+  };
+
+  const tbody = document.getElementById('prConceptosBody');
+  tbody.innerHTML = '';
+
+  breakdownEl.querySelectorAll('.bk-row').forEach(row=>{
+    const k = row.querySelector('.k').textContent;
+    const v = row.querySelector('.v').textContent;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${k}</td><td>${bases[k] || '—'}</td><td class="num">${v}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('prTotal').textContent = fmt(total);
+}
+
+$('printBtn').addEventListener('click', ()=>{
+  buildPrintReport();
+  setTimeout(()=> window.print(), 100);
+});
+
+/* ============================================================
+   5) TABS
+   ============================================================ */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.setAttribute('aria-selected','false'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('show'));
+    btn.setAttribute('aria-selected','true');
+    document.getElementById(btn.dataset.tab).classList.add('show');
+  });
+});
+
+/* ============================================================
+   6) TABLA 2026
+   ============================================================ */
+(function tabla(){
+  const salarios = [1750905, 2500000, 3000000, 4000000, 5000000, 8000000];
+  const tbody = document.getElementById('tablaBody');
+  salarios.forEach(s=>{
+    const aux = s <= 2*SMMLV ? AUXILIO : 0;
+    const base = s + aux;
+    const ces  = base;
+    const int  = ces * 0.12;
+    const pri  = base;
+    const vac  = s * 360 / 720;
+    const tot  = ces + int + pri + vac;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${fmt(s)}${s===1750905?' (mínimo)':''}</td>
+      <td>${fmt(ces)}</td>
+      <td>${fmt(int)}</td>
+      <td>${fmt(pri)}</td>
+      <td>${fmt(vac)}</td>
+      <td><strong>${fmt(tot)}</strong></td>`;
+    tbody.appendChild(tr);
+  });
+})();
+</script>
+</body>
+</html>
