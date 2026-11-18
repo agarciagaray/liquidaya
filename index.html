@@ -11,7 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ---------- Tokens / Temas ---------- */
     :root {
       --radius: 16px;
       --radius-sm: 10px;
@@ -89,7 +88,6 @@
       padding: 0 20px
     }
 
-    /* ---------- Header ---------- */
     header.site {
       position: sticky;
       top: 0;
@@ -193,7 +191,6 @@
       color: var(--text)
     }
 
-    /* ---------- Hero ---------- */
     .hero {
       padding: 48px 0 24px
     }
@@ -271,7 +268,6 @@
       color: var(--success)
     }
 
-    /* ---------- Calculadora ---------- */
     .calc-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -427,7 +423,6 @@
       background: var(--surface-2)
     }
 
-    /* ---------- Resultado ---------- */
     .result {
       margin-top: 18px;
       padding: 18px;
@@ -479,6 +474,7 @@
     .bk-row {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
       padding: 9px 12px;
       background: var(--surface);
@@ -488,12 +484,29 @@
     }
 
     .bk-row .k {
-      color: var(--muted)
+      color: var(--muted);
+      flex: 1 1 auto;
+      min-width: 0
+    }
+
+    .bk-row .days {
+      flex: 0 0 auto;
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     .bk-row .v {
+      flex: 0 0 auto;
       font-weight: 700;
-      font-variant-numeric: tabular-nums
+      font-variant-numeric: tabular-nums;
+      min-width: 88px;
+      text-align: right;
     }
 
     .bk-row.indem .v {
@@ -513,7 +526,6 @@
       margin-top: 10px
     }
 
-    /* ---------- Secciones ---------- */
     section.block {
       padding: 44px 0;
       border-top: 1px solid var(--border)
@@ -685,7 +697,6 @@
       color: var(--warn)
     }
 
-    /* Tabla */
     .table-wrap {
       overflow-x: auto;
       border: 1px solid var(--border);
@@ -729,7 +740,6 @@
       background: var(--surface-2)
     }
 
-    /* FAQ */
     .faq {
       display: grid;
       gap: 10px
@@ -781,7 +791,6 @@
       font-size: .92rem
     }
 
-    /* Footer */
     footer.site {
       border-top: 1px solid var(--border);
       padding: 32px 0;
@@ -810,7 +819,6 @@
       color: var(--text)
     }
 
-    /* Responsive */
     @media (max-width: 900px) {
       .hero-grid {
         grid-template-columns: 1fr
@@ -841,9 +849,21 @@
       .result .total {
         font-size: 1.6rem
       }
+
+      .bk-row {
+        flex-wrap: wrap
+      }
+
+      .bk-row .k {
+        flex: 1 1 100%
+      }
+
+      .bk-row .v {
+        min-width: 0;
+        margin-left: auto
+      }
     }
 
-    /* Accesibilidad */
     :focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px
@@ -1011,6 +1031,12 @@
         font-variant-numeric: tabular-nums;
       }
 
+      .pr-conceptos .dias {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
       .pr-conceptos tfoot td {
         border-top: 2px solid #2563eb;
         border-bottom: none;
@@ -1057,7 +1083,6 @@
 
 <body>
 
-  <!-- ================= HEADER ================= -->
   <header class="site">
     <div class="wrap nav">
       <a class="brand" href="#top">
@@ -1079,7 +1104,6 @@
   </header>
 
   <main id="top">
-    <!-- ================= HERO + CALCULADORA ================= -->
     <div class="wrap">
       <section class="hero">
         <div class="hero-grid">
@@ -1104,11 +1128,10 @@
                 </svg> Resultado en vivo mientras escribes</li>
               <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3">
                   <path d="M20 6 9 17l-5-5" />
-                </svg> Explicación paso a paso de cada concepto</li>
+                </svg> Días laborados visibles en cada concepto</li>
             </ul>
           </div>
 
-          <!-- Calculadora -->
           <div class="calc-card" id="calculadora">
             <h2>Tu liquidación</h2>
             <p class="sub">Completa los datos. El resultado se actualiza solo.</p>
@@ -1161,7 +1184,6 @@
               </div>
             </form>
 
-            <!-- Resultado -->
             <div class="result" id="result" aria-live="polite">
               <div class="total-label">Total estimado</div>
               <div class="total" id="total">$0</div>
@@ -1178,7 +1200,6 @@
       </section>
     </div>
 
-    <!-- ================= GUÍA / TABS ================= -->
     <section class="block" id="guia">
       <div class="wrap">
         <h2 class="section-title">Cómo se calcula la liquidación, paso a paso</h2>
@@ -1191,7 +1212,6 @@
           <button class="tab-btn" role="tab" aria-selected="false" data-tab="t4">Errores comunes</button>
         </div>
 
-        <!-- Tab 1 -->
         <div class="tab-panel show" id="t1" role="tabpanel">
           <div class="steps">
             <div class="step">
@@ -1238,7 +1258,6 @@
           </div>
         </div>
 
-        <!-- Tab 2 -->
         <div class="tab-panel" id="t2" role="tabpanel">
           <div class="cards-3">
             <div class="case-card">
@@ -1262,7 +1281,6 @@
           </div>
         </div>
 
-        <!-- Tab 3 -->
         <div class="tab-panel" id="t3" role="tabpanel">
           <div class="two-col">
             <div class="panel">
@@ -1287,7 +1305,6 @@
           </div>
         </div>
 
-        <!-- Tab 4 -->
         <div class="tab-panel" id="t4" role="tabpanel">
           <div class="steps">
             <div class="step">
@@ -1330,7 +1347,6 @@
       </div>
     </section>
 
-    <!-- ================= TABLA ================= -->
     <section class="block" id="tabla">
       <div class="wrap">
         <h2 class="section-title">Tabla de liquidación 2026 por salario (un año trabajado)</h2>
@@ -1354,7 +1370,6 @@
       </div>
     </section>
 
-    <!-- ================= FAQ ================= -->
     <section class="block" id="faq">
       <div class="wrap">
         <h2 class="section-title">Preguntas frecuentes</h2>
@@ -1398,7 +1413,7 @@
           <details>
             <summary>¿Cómo se cuentan los días?</summary>
             <div class="faq-body">En base comercial de 360 días: cada mes cuenta 30 días, sin importar si tiene 28 o 31.
-              Por eso un año son 360 días y no 365.</div>
+              Además se incluye tanto el día de ingreso como el de retiro. Por eso un año son 360 días y no 365.</div>
           </details>
           <details>
             <summary>¿Qué pasó con el SMMLV 2026 y su suspensión?</summary>
@@ -1431,9 +1446,6 @@
     </div>
   </footer>
 
-  <!-- ============================================================
-     REPORTE DE IMPRESIÓN (oculto en pantalla, visible al imprimir)
-     ============================================================ -->
   <section id="printReport" class="print-report" aria-hidden="true">
     <div class="pr-header">
       <div class="pr-brand">
@@ -1486,13 +1498,14 @@
         <tr>
           <th>Concepto</th>
           <th>Base legal</th>
+          <th class="dias">Días</th>
           <th class="num">Valor (COP)</th>
         </tr>
       </thead>
       <tbody id="prConceptosBody"></tbody>
       <tfoot>
         <tr>
-          <td colspan="2"><strong>Total estimado a pagar</strong></td>
+          <td colspan="3"><strong>Total estimado a pagar</strong></td>
           <td class="num"><strong id="prTotal"></strong></td>
         </tr>
       </tfoot>
@@ -1500,7 +1513,8 @@
 
     <div class="pr-nota">
       <strong>Nota:</strong> Este reporte es informativo y se basa en los valores vigentes de 2026
-      (SMMLV $1.750.905 · Auxilio de transporte $249.095) y en la base comercial de 360 días.
+      (SMMLV $1.750.905 · Auxilio de transporte $249.095) y en la base comercial de 360 días,
+      incluyendo tanto el día de ingreso como el de retiro.
       No sustituye la liquidación oficial del empleador ni la asesoría de un profesional.
     </div>
 
@@ -1512,7 +1526,7 @@
 
   <script>
     /* ============================================================
-       1) TEMA (claro / oscuro / auto) con persistencia
+       1) TEMA
        ============================================================ */
     (function () {
       const root = document.documentElement;
@@ -1557,16 +1571,15 @@
       const n = parseMoney(el.value);
       el.value = n ? new Intl.NumberFormat('es-CO').format(n) : '';
     }
+    /* Base comercial 360 días, INCLUYENDO el día de ingreso y el de retiro */
     function daysBetween(a, b) {
       if (!a || !b) return 0;
       const [ya, ma, da] = a.split('-').map(Number);
       const [yb, mb, db] = b.split('-').map(Number);
-      // Se calcula la diferencia en base 360 y se suma 1 para incluir el día de inicio
       const d = (yb - ya) * 360 + (mb - ma) * 30 + (db - da) + 1;
       return Math.max(0, d);
     }
 
-    /* Año dinámico en copyright */
     document.getElementById('yearNow').textContent = new Date().getFullYear();
 
     /* ============================================================
@@ -1604,6 +1617,9 @@
       el.addEventListener('input', calculate);
     });
 
+    /* Guarda los días usados para que el reporte de impresión los reutilice */
+    let lastCalc = null;
+
     function calculate() {
       const salario = parseMoney(salarioEl.value);
       const ingreso = ingresoEl.value;
@@ -1635,6 +1651,7 @@
       const vacaciones = baseVacaciones * diasTotales / 720;
 
       let indemnizacion = 0;
+      let diasIndem = 0;
       const aniosCompletos = Math.floor(diasTotales / 360);
       if (tipo === 'sin_justa') {
         if (salario < 10 * SMMLV) {
@@ -1646,33 +1663,51 @@
         } else {
           indemnizacion = 20 * salario / 30 * aniosCompletos;
         }
+        diasIndem = diasTotales;
       } else if (tipo === 'fijo' && fijoFinEl.value) {
         const faltantes = daysBetween(retiro, fijoFinEl.value);
-        const diasIndem = Math.max(15, faltantes);
+        diasIndem = Math.max(15, faltantes);
         indemnizacion = diasIndem * salario / 30;
       }
 
       const total = cesantias + intereses + prima + vacaciones + indemnizacion;
 
+      /* Construcción de filas con etiqueta de días */
       breakdownEl.innerHTML = '';
       const rows = [
-        ['Cesantías', cesantias],
-        ['Intereses sobre cesantías', intereses],
-        ['Prima de servicios', prima],
-        ['Vacaciones', vacaciones],
+        { k: 'Cesantías', v: cesantias, dias: diasAnio, diasLabel: `${diasAnio} días del año en curso` },
+        { k: 'Intereses sobre cesantías', v: intereses, dias: diasAnio, diasLabel: `${diasAnio} días` },
+        { k: 'Prima de servicios', v: prima, dias: diasSemestre, diasLabel: `${diasSemestre} días del semestre` },
+        { k: 'Vacaciones', v: vacaciones, dias: diasTotales, diasLabel: `${diasTotales} días (antigüedad)` },
       ];
-      if (indemnizacion > 0) rows.push(['Indemnización (art. 64)', indemnizacion, true]);
+      if (indemnizacion > 0) {
+        rows.push({
+          k: 'Indemnización (art. 64)', v: indemnizacion, dias: diasIndem,
+          diasLabel: tipo === 'fijo' ? `${diasIndem} días faltantes` : `${diasIndem} días`,
+          indem: true
+        });
+      }
 
-      rows.forEach(([k, v, indem]) => {
+      rows.forEach(r => {
         const div = document.createElement('div');
-        div.className = 'bk-row' + (indem ? ' indem' : '');
-        div.innerHTML = `<span class="k">${k}</span><span class="v">${fmt(v)}</span>`;
+        div.className = 'bk-row' + (r.indem ? ' indem' : '');
+        div.innerHTML = `
+      <span class="k">${r.k}</span>
+      <span class="days">${r.diasLabel}</span>
+      <span class="v">${fmt(r.v)}</span>`;
         breakdownEl.appendChild(div);
       });
 
       totalEl.textContent = fmt(total);
       resultEl.classList.add('show');
       resultEl.dataset.total = total;
+
+      /* Guardamos para el reporte */
+      lastCalc = {
+        salario, ingreso, retiro, tipo, usaAux,
+        diasTotales, diasAnio, diasSemestre, diasIndem,
+        cesantias, intereses, prima, vacaciones, indemnizacion, total
+      };
 
       localStorage.setItem('liquidaya-data', JSON.stringify({
         salario: salarioEl.value, ingreso, retiro, tipo, fijoFin: fijoFinEl.value, aux: auxilioEl.checked
@@ -1698,8 +1733,9 @@
     $('copyBtn').addEventListener('click', () => {
       const lines = Array.from(breakdownEl.querySelectorAll('.bk-row')).map(r => {
         const k = r.querySelector('.k').textContent;
+        const d = r.querySelector('.days').textContent;
         const v = r.querySelector('.v').textContent;
-        return `${k}: ${v}`;
+        return `${k} (${d}): ${v}`;
       });
       const txt = `Liquidación estimada (LiquidaYa)\n${lines.join('\n')}\nTOTAL: ${totalEl.textContent}`;
       navigator.clipboard.writeText(txt).then(() => {
@@ -1712,17 +1748,9 @@
        4) REPORTE DE IMPRESIÓN
        ============================================================ */
     function buildPrintReport() {
-      const salario = parseMoney(salarioEl.value);
-      const ingreso = ingresoEl.value;
-      const retiro = retiroEl.value;
-      const tipo = tipoEl.value;
-      const usaAux = auxilioEl.checked && salario <= 2 * SMMLV && salario > 0;
-
-      if (!salario || !ingreso || !retiro || resultEl.dataset.total === undefined) {
-        calculate();
-      }
-
-      const total = Number(resultEl.dataset.total || 0);
+      if (!lastCalc) { calculate(); }
+      const c = lastCalc;
+      if (!c) return;
 
       const fmtFecha = iso => {
         if (!iso) return '—';
@@ -1731,11 +1759,10 @@
         return `${Number(d)} de ${meses[Number(m) - 1]} de ${y}`;
       };
 
-      const diasTotales = daysBetween(ingreso, retiro);
-      const anios = Math.floor(diasTotales / 360);
-      const meses = Math.floor((diasTotales % 360) / 30);
-      const dias = diasTotales % 30;
-      const tiempoTxt = `${anios} año(s), ${meses} mes(es), ${dias} día(s) — ${diasTotales} días (base 360)`;
+      const anios = Math.floor(c.diasTotales / 360);
+      const meses = Math.floor((c.diasTotales % 360) / 30);
+      const dias = c.diasTotales % 30;
+      const tiempoTxt = `${anios} año(s), ${meses} mes(es), ${dias} día(s) — ${c.diasTotales} días (base 360)`;
 
       const motivos = {
         renuncia: 'Renuncia voluntaria',
@@ -1755,13 +1782,13 @@
         `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
       );
       document.getElementById('prRef').textContent = ref;
-      document.getElementById('prSalario').textContent = fmt(salario);
-      document.getElementById('prIngreso').textContent = fmtFecha(ingreso);
-      document.getElementById('prRetiro').textContent = fmtFecha(retiro);
+      document.getElementById('prSalario').textContent = fmt(c.salario);
+      document.getElementById('prIngreso').textContent = fmtFecha(c.ingreso);
+      document.getElementById('prRetiro').textContent = fmtFecha(c.retiro);
       document.getElementById('prTiempo').textContent = tiempoTxt;
-      document.getElementById('prMotivo').textContent = motivos[tipo] || tipo;
+      document.getElementById('prMotivo').textContent = motivos[c.tipo] || c.tipo;
       document.getElementById('prAuxilio').textContent =
-        usaAux ? `Sí — ${fmt(AUXILIO)} mensuales` : 'No';
+        c.usaAux ? `Sí — ${fmt(AUXILIO)} mensuales` : 'No';
       document.getElementById('prYear').textContent = now.getFullYear();
 
       const bases = {
@@ -1775,15 +1802,27 @@
       const tbody = document.getElementById('prConceptosBody');
       tbody.innerHTML = '';
 
-      breakdownEl.querySelectorAll('.bk-row').forEach(row => {
-        const k = row.querySelector('.k').textContent;
-        const v = row.querySelector('.v').textContent;
+      const filas = [
+        { k: 'Cesantías', v: c.cesantias, dias: c.diasAnio },
+        { k: 'Intereses sobre cesantías', v: c.intereses, dias: c.diasAnio },
+        { k: 'Prima de servicios', v: c.prima, dias: c.diasSemestre },
+        { k: 'Vacaciones', v: c.vacaciones, dias: c.diasTotales },
+      ];
+      if (c.indemnizacion > 0) {
+        filas.push({ k: 'Indemnización (art. 64)', v: c.indemnizacion, dias: c.diasIndem });
+      }
+
+      filas.forEach(f => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${k}</td><td>${bases[k] || '—'}</td><td class="num">${v}</td>`;
+        tr.innerHTML = `
+      <td>${f.k}</td>
+      <td>${bases[f.k] || '—'}</td>
+      <td class="dias">${f.dias}</td>
+      <td class="num">${fmt(f.v)}</td>`;
         tbody.appendChild(tr);
       });
 
-      document.getElementById('prTotal').textContent = fmt(total);
+      document.getElementById('prTotal').textContent = fmt(c.total);
     }
 
     $('printBtn').addEventListener('click', () => {
